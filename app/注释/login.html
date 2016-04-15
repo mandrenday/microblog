@@ -1,0 +1,43 @@
+<!-- extend from base layout-->
+{%extends "base.html"%}
+
+{%block content %}
+<script type="text/javascript">
+function set_openid(openid,pr)
+{
+	u=openid.search('<username>')
+	if(u!=-1){
+		user=prompt('Enter your '+pr + 'username:')
+		openid=openid.substr(0,u)+user
+	}
+	form=document.forms['login'];
+	form.elements['openid'].value=openid;
+}
+</script>
+<!-- 在需要用到表单的地方需要实例化一个表单对象储存为一个模板参数
+所以在使用render_template函数进行渲染时要记得传入一个模板参数
+其中的form.hidden_tag用来实现在配置中激活的CSRF保护，如实有激活
+CSRF，则这个字段需要出现在所有的表单中-->
+<h1> Sign In</h1>
+<form action="" method="post" name="login">
+	{{form.hidden_tag()}}
+	<p>
+		Please enter your OpenID,or select one of the providers  below:<br>
+<!-- 在表单中的实际的字段也可以被表单对象渲染，只需要在字段应该插入的地方指明
+一个{{form.field_name}}模板参数，没有在表单中定义按钮而是在这里才进行定义
+是因为提交按钮并不携带数据，所以没有必要在表单类中定义
+即若是有要提交数据的字段应该在表单类中定义-->	
+
+<!-- 通常情况下，任何需要验证的字段都会把错误信息放入form.field_name.errors下-->
+		{{form.openid(size=80)}}<br>
+		{% for error in form.openid.errors %}
+			<span style="color:red;">[{{error}}]</span>
+		{% endfor %}<br>
+		{% for pr in providers%}
+		<a href="javascript:set_openid('{{pr.url}}','{{pr.name}}');">{{pr.name}}</a>
+		{% endfor %}
+		</p>
+	<p>{{form.remember_me}} Remember Me</p>
+	<p><input type="submit" value="Sign In"></p>
+	</form>
+{% endblock %}	

@@ -1,0 +1,29 @@
+<!-- extend base layout -->
+
+{% extends "base.html" %}
+{% block content %}
+<h1>Hi, {{g.user.nickname}}!</h1>
+<form action="" method="post" name="post">
+	{{form.hidden_tag()}}
+	<table>
+		<tr>
+			<td>say something:</td>
+			<td>{{form.post(size=30,maxlength=140)}}</td>
+			<td>
+			{% for error in form.errors.post %}
+			<span style="color:red;">[{{error}}]</span><br>
+			{% endfor %}
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value ="Post!"></td>
+			<td></td>
+		</tr>
+	</table>
+{% for post in posts %}
+	{% include 'post.html' %}
+{% endfor %}
+{% if page_num > 0 %}<a href="{{url_for('index',page=page_num-1)}}"><< Newer posts</a>{% else %}<< Newer posts{% endif %}
+{% if hasNext %}<a href="{{url_for('index',page=page_num+1)}}">&nbsp Older posts>></a>{% else %}Older posts >>{% endif %}
+{% endblock %}

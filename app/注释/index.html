@@ -1,0 +1,14 @@
+<!--每一个页面就是一个模板，而其中用到的{{}}内部的则是用来获取从
+视图函数传递过来的值，extend表示继承自base模板-->
+
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Hi, {{user.nickname}}!</h1>
+{% for post in posts %}
+<p>
+  {{post.author.nickname}} says: <b>{{post.body}}</b>
+</p>
+{% endfor %}
+{% endblock %}
